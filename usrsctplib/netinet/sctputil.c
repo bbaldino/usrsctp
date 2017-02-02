@@ -2759,8 +2759,10 @@ sctp_add_pad_tombuf(struct mbuf *m, int padlen)
 			return (NULL);
 		}
 		SCTP_BUF_LEN(m_last) = 0;
-		SCTP_BUF_NEXT(m_last) = NULL;
-		SCTP_BUF_NEXT(m) = m_last;
+		//SCTP_BUF_NEXT(m_last) = NULL;
+		SCTP_BUF_ASSIGN_NEXT(m_last, NULL);
+		//SCTP_BUF_NEXT(m) = m_last;
+		SCTP_BUF_ASSIGN_NEXT(m, m_last);
 	}
 	dp = mtod(m_last, caddr_t) + SCTP_BUF_LEN(m_last);
 	SCTP_BUF_LEN(m_last) += padlen;
@@ -2828,7 +2830,8 @@ sctp_notify_assoc_change(uint16_t state, struct sctp_tcb *stcb,
 				goto set_error;
 			}
 		}
-		SCTP_BUF_NEXT(m_notify) = NULL;
+		//SCTP_BUF_NEXT(m_notify) = NULL;
+		SCTP_BUF_ASSIGN_NEXT(m_notify, NULL);
 		sac = mtod(m_notify, struct sctp_assoc_change *);
 		memset(sac, 0, notif_len);
 		sac->sac_type = SCTP_ASSOC_CHANGE;
@@ -3026,7 +3029,8 @@ sctp_notify_peer_addr_change(struct sctp_tcb *stcb, uint32_t state,
 	spc->spc_assoc_id = sctp_get_associd(stcb);
 
 	SCTP_BUF_LEN(m_notify) = sizeof(struct sctp_paddr_change);
-	SCTP_BUF_NEXT(m_notify) = NULL;
+	//SCTP_BUF_NEXT(m_notify) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, NULL);
 
 	/* append to socket */
 	control = sctp_build_readq_entry(stcb, stcb->asoc.primary_destination,
@@ -3152,7 +3156,8 @@ sctp_notify_send_failed(struct sctp_tcb *stcb, uint8_t sent, uint32_t error,
 			chk->send_size -= (chkhdr_len + padding_len);
 		}
 	}
-	SCTP_BUF_NEXT(m_notify) = chk->data;
+	//SCTP_BUF_NEXT(m_notify) = chk->data;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, chk->data);
 	/* Steal off the mbuf */
 	chk->data = NULL;
 	/*
@@ -3252,7 +3257,8 @@ sctp_notify_send_failed2(struct sctp_tcb *stcb, uint32_t error,
 		ssf->ssf_assoc_id = sctp_get_associd(stcb);
 	}
     SCTP_PRINTF("=====>Setting tail pointer of m_notify control to sp->data: %p\n", sp->data);
-	SCTP_BUF_NEXT(m_notify) = sp->data;
+	//SCTP_BUF_NEXT(m_notify) = sp->data;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, sp->data);
 
 	/* Steal off the mbuf */
 	sp->data = NULL;
@@ -3320,7 +3326,8 @@ sctp_notify_adaptation_layer(struct sctp_tcb *stcb)
 	sai->sai_assoc_id = sctp_get_associd(stcb);
 
 	SCTP_BUF_LEN(m_notify) = sizeof(struct sctp_adaptation_event);
-	SCTP_BUF_NEXT(m_notify) = NULL;
+	//SCTP_BUF_NEXT(m_notify) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, NULL);
 
 	/* append to socket */
 	control = sctp_build_readq_entry(stcb, stcb->asoc.primary_destination,
@@ -3379,7 +3386,8 @@ sctp_notify_partial_delivery_indication(struct sctp_tcb *stcb, uint32_t error,
 	pdapi->pdapi_assoc_id = sctp_get_associd(stcb);
 
 	SCTP_BUF_LEN(m_notify) = sizeof(struct sctp_pdapi_event);
-	SCTP_BUF_NEXT(m_notify) = NULL;
+	//SCTP_BUF_NEXT(m_notify) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, NULL);
 	control = sctp_build_readq_entry(stcb, stcb->asoc.primary_destination,
 					 0, 0, stcb->asoc.context, 0, 0, 0,
 					 m_notify);
@@ -3487,7 +3495,8 @@ sctp_notify_shutdown_event(struct sctp_tcb *stcb)
 	sse->sse_assoc_id = sctp_get_associd(stcb);
 
 	SCTP_BUF_LEN(m_notify) = sizeof(struct sctp_shutdown_event);
-	SCTP_BUF_NEXT(m_notify) = NULL;
+	//SCTP_BUF_NEXT(m_notify) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, NULL);
 
 	/* append to socket */
 	control = sctp_build_readq_entry(stcb, stcb->asoc.primary_destination,
@@ -3539,7 +3548,8 @@ sctp_notify_sender_dry_event(struct sctp_tcb *stcb,
 	event->sender_dry_assoc_id = sctp_get_associd(stcb);
 
 	SCTP_BUF_LEN(m_notify) = sizeof(struct sctp_sender_dry_event);
-	SCTP_BUF_NEXT(m_notify) = NULL;
+	//SCTP_BUF_NEXT(m_notify) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, NULL);
 
 	/* append to socket */
 	control = sctp_build_readq_entry(stcb, stcb->asoc.primary_destination,
@@ -3591,7 +3601,8 @@ sctp_notify_stream_reset_add(struct sctp_tcb *stcb, uint16_t numberin, uint16_t 
 	stradd->strchange_instrms = numberin;
 	stradd->strchange_outstrms = numberout;
 	SCTP_BUF_LEN(m_notify) = sizeof(struct sctp_stream_change_event);
-	SCTP_BUF_NEXT(m_notify) = NULL;
+	//SCTP_BUF_NEXT(m_notify) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, NULL);
 	if (sctp_sbspace(&stcb->asoc, &stcb->sctp_socket->so_rcv) < SCTP_BUF_LEN(m_notify)) {
 		/* no space */
 		sctp_m_freem(m_notify);
@@ -3641,7 +3652,8 @@ sctp_notify_stream_reset_tsn(struct sctp_tcb *stcb, uint32_t sending_tsn, uint32
 	strasoc->assocreset_local_tsn = sending_tsn;
 	strasoc->assocreset_remote_tsn = recv_tsn;
 	SCTP_BUF_LEN(m_notify) = sizeof(struct sctp_assoc_reset_event);
-	SCTP_BUF_NEXT(m_notify) = NULL;
+	//SCTP_BUF_NEXT(m_notify) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, NULL);
 	if (sctp_sbspace(&stcb->asoc, &stcb->sctp_socket->so_rcv) < SCTP_BUF_LEN(m_notify)) {
 		/* no space */
 		sctp_m_freem(m_notify);
@@ -3707,7 +3719,8 @@ sctp_notify_stream_reset(struct sctp_tcb *stcb,
 		}
 	}
 	SCTP_BUF_LEN(m_notify) = len;
-	SCTP_BUF_NEXT(m_notify) = NULL;
+	//SCTP_BUF_NEXT(m_notify) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, NULL);
 	if (sctp_sbspace(&stcb->asoc, &stcb->sctp_socket->so_rcv) < SCTP_BUF_LEN(m_notify)) {
 		/* no space */
 		sctp_m_freem(m_notify);
@@ -3760,7 +3773,8 @@ sctp_notify_remote_error(struct sctp_tcb *stcb, uint16_t error, struct sctp_erro
 			return;
 		}
 	}
-	SCTP_BUF_NEXT(m_notify) = NULL;
+	//SCTP_BUF_NEXT(m_notify) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m_notify, NULL);
 	sre = mtod(m_notify, struct sctp_remote_error *);
 	memset(sre, 0, notif_len);
 	sre->sre_type = SCTP_REMOTE_ERROR;
@@ -4975,7 +4989,8 @@ sctp_add_to_readq(struct sctp_inpcb *inp,
 				control->data = sctp_m_free(m);
 				m = control->data;
 			} else {
-				SCTP_BUF_NEXT(prev) = sctp_m_free(m);
+				//SCTP_BUF_NEXT(prev) = sctp_m_free(m);
+				SCTP_BUF_ASSIGN_NEXT(prev, sctp_m_free(m));
 				m = SCTP_BUF_NEXT(prev);
 			}
 			if (m == NULL) {

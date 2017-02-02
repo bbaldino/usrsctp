@@ -318,7 +318,7 @@ extern struct pr_usrreqs sctp_usrreqs;
 	_m = (data); \
 	while (_m && (SCTP_BUF_LEN(_m) == 0)) { \
 		(data)  = SCTP_BUF_NEXT(_m); \
-		SCTP_BUF_NEXT(_m) = NULL; \
+		SCTP_BUF_ASSIGN_NEXT(_m, NULL);\
 		sctp_m_free(_m); \
 		_m = (data); \
 	} \

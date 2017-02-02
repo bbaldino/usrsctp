@@ -2664,7 +2664,8 @@ sctp_handle_cookie_echo(struct mbuf *m, int iphlen, int offset,
 		while (SCTP_BUF_NEXT(m_at) != NULL) {
 			m_at = SCTP_BUF_NEXT(m_at);
 		}
-		SCTP_BUF_NEXT(m_at) = m_sig;
+		//SCTP_BUF_NEXT(m_at) = m_sig;
+		SCTP_BUF_ASSIGN_NEXT(m_at, m_sig);
 	}
 
 	if (cookie_ok == 0) {
@@ -5803,7 +5804,8 @@ sctp_process_control(struct mbuf *m, int iphlen, int *offset, int length,
 					cause->code =  htons(SCTP_CAUSE_UNRECOG_CHUNK);
 					cause->length = htons((uint16_t)(len + sizeof(struct sctp_gen_error_cause)));
 					SCTP_BUF_LEN(op_err) = sizeof(struct sctp_gen_error_cause);
-					SCTP_BUF_NEXT(op_err) = SCTP_M_COPYM(m, *offset, len, M_NOWAIT);
+					//SCTP_BUF_NEXT(op_err) = SCTP_M_COPYM(m, *offset, len, M_NOWAIT);
+					SCTP_BUF_ASSIGN_NEXT(op_err, SCTP_M_COPYM(m, *offset, len, M_NOWAIT));
 					if (SCTP_BUF_NEXT(op_err) != NULL) {
 #ifdef SCTP_MBUF_LOGGING
 						if (SCTP_BASE_SYSCTL(sctp_logging_level) & SCTP_MBUF_LOGGING_ENABLE) {

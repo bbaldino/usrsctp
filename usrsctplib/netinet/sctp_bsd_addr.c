@@ -834,7 +834,9 @@ sctp_get_mbuf_for_msg(unsigned int space_needed, int want_header,
 		}
 	}
 	SCTP_BUF_LEN(m) = 0;
-	SCTP_BUF_NEXT(m) = SCTP_BUF_NEXT_PKT(m) = NULL;
+	//SCTP_BUF_NEXT(m) = SCTP_BUF_NEXT_PKT(m) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m, NULL);
+	SCTP_BUF_NEXT_PKT(m) = NULL;
 
 	/* __Userspace__
 	 * Check if anything need to be done to ensure logging works
@@ -858,7 +860,8 @@ sctp_get_mbuf_for_msg(unsigned int space_needed, int want_header,
 	}
 	if (SCTP_BUF_NEXT(m)) {
 		sctp_m_freem(SCTP_BUF_NEXT(m));
-		SCTP_BUF_NEXT(m) = NULL;
+		//SCTP_BUF_NEXT(m) = NULL;
+		SCTP_BUF_ASSIGN_NEXT(m, NULL);
 	}
 #ifdef SCTP_MBUF_LOGGING
 	if (SCTP_BASE_SYSCTL(sctp_logging_level) & SCTP_MBUF_LOGGING_ENABLE) {
@@ -888,7 +891,8 @@ sctp_get_mbuf_for_msg(unsigned int space_needed, int want_header,
 	}
 	if (SCTP_BUF_NEXT(m)) {
 		sctp_m_freem(SCTP_BUF_NEXT(m));
-		SCTP_BUF_NEXT(m) = NULL;
+		//SCTP_BUF_NEXT(m) = NULL;
+		SCTP_BUF_ASSIGN_NEXT(m, NULL);
 	}
 #ifdef SCTP_MBUF_LOGGING
 	if (SCTP_BASE_SYSCTL(sctp_logging_level) & SCTP_MBUF_LOGGING_ENABLE) {
@@ -950,7 +954,9 @@ sctp_get_mbuf_for_msg(unsigned int space_needed, int want_header,
 #endif
 	}
 	SCTP_BUF_LEN(m) = 0;
-	SCTP_BUF_NEXT(m) = SCTP_BUF_NEXT_PKT(m) = NULL;
+	//SCTP_BUF_NEXT(m) = SCTP_BUF_NEXT_PKT(m) = NULL;
+	SCTP_BUF_ASSIGN_NEXT(m, NULL);
+	SCTP_BUF_NEXT_PKT(m) = NULL;
 #ifdef SCTP_MBUF_LOGGING
 	if (SCTP_BASE_SYSCTL(sctp_logging_level) & SCTP_MBUF_LOGGING_ENABLE) {
 		sctp_log_mb(m, SCTP_MBUF_IALLOC);

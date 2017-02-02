@@ -770,7 +770,8 @@ sctp_handle_asconf(struct mbuf *m, unsigned int offset,
 
 		/* add any (error) result to the reply mbuf chain */
 		if (m_result != NULL) {
-			SCTP_BUF_NEXT(m_tail) = m_result;
+			//SCTP_BUF_NEXT(m_tail) = m_result;
+			SCTP_BUF_ASSIGN_NEXT(m_tail, m_result);
 			m_tail = m_result;
 			/* update lengths, make sure it's aligned too */
 			SCTP_BUF_LEN(m_result) = SCTP_SIZE32(SCTP_BUF_LEN(m_result));
@@ -2774,7 +2775,8 @@ sctp_compose_asconf(struct sctp_tcb *stcb, int *retlen, int addr_locked)
 		}
 	}
 	/* chain it all together */
-	SCTP_BUF_NEXT(m_asconf_chk) = m_asconf;
+	//SCTP_BUF_NEXT(m_asconf_chk) = m_asconf;
+	SCTP_BUF_ASSIGN_NEXT(m_asconf_chk, m_asconf);
 	*retlen = SCTP_BUF_LEN(m_asconf_chk) + SCTP_BUF_LEN(m_asconf);
 	acp->ch.chunk_length = htons(*retlen);
 

@@ -664,7 +664,8 @@ sctp_setup_tail_pointer(struct sctp_queued_to_read *control)
 				control->data = sctp_m_free(m);
 				m = control->data;
 			} else {
-				SCTP_BUF_NEXT(prev) = sctp_m_free(m);
+				//SCTP_BUF_NEXT(prev) = sctp_m_free(m);
+				SCTP_BUF_ASSIGN_NEXT(prev, sctp_m_free(m));
 				m = SCTP_BUF_NEXT(prev);
 			}
 			if (m == NULL) {
@@ -717,7 +718,8 @@ sctp_add_to_tail_pointer(struct sctp_queued_to_read *control, struct mbuf *m)
 				control->tail_mbuf->m_next = sctp_m_free(m);
 				m = control->tail_mbuf->m_next;
 			} else {
-				SCTP_BUF_NEXT(prev) = sctp_m_free(m);
+				//SCTP_BUF_NEXT(prev) = sctp_m_free(m);
+				SCTP_BUF_ASSIGN_NEXT(prev, sctp_m_free(m));
 				m = SCTP_BUF_NEXT(prev);
 			}
 			if (m == NULL) {
@@ -2756,7 +2758,8 @@ sctp_process_data(struct mbuf **mm, int iphlen, int *offset, int length,
 						cause->code = htons(SCTP_CAUSE_UNRECOG_CHUNK);
 						cause->length = htons((uint16_t)(chk_length + sizeof(struct sctp_gen_error_cause)));
 						SCTP_BUF_LEN(op_err) = sizeof(struct sctp_gen_error_cause);
-						SCTP_BUF_NEXT(op_err) = SCTP_M_COPYM(m, *offset, chk_length, M_NOWAIT);
+						//SCTP_BUF_NEXT(op_err) = SCTP_M_COPYM(m, *offset, chk_length, M_NOWAIT);
+						SCTP_BUF_ASSIGN_NEXT(op_err, SCTP_M_COPYM(m, *offset, chk_length, M_NOWAIT));
 						if (SCTP_BUF_NEXT(op_err) != NULL) {
 							sctp_queue_op_err(stcb, op_err);
 						} else {

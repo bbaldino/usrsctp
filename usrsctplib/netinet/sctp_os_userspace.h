@@ -816,6 +816,15 @@ sctp_hashfreedestroy(void *vhashtbl, struct malloc_type *type, u_long hashmask);
 /* Mbuf manipulation and access macros  */
 #define SCTP_BUF_LEN(m) (m->m_len)
 #define SCTP_BUF_NEXT(m) (m->m_next)
+#define SCTP_BUF_ASSIGN_NEXT(m, new_m) do { \
+    if (new_m && ((void*)new_m < (void*)0x100)) { \
+        SCTP_PRINTF("=====> bad m_next assignment in %s, line %d to addr %p\n", __FILE__, __LINE__, (void*)new_m); \
+        SCTP_PRINTF("=====> %p\n", ((struct mbuf*)new_m)->m_next); \
+    } else { \
+        SCTP_PRINTF("=====> good m_next assignment in %s, line %d\n", __FILE__, __LINE__); \
+    } \
+    (m->m_next = new_m); \
+} while (0);
 #define SCTP_BUF_NEXT_PKT(m) (m->m_nextpkt)
 #define SCTP_BUF_RESV_UF(m, size) m->m_data += size
 #define SCTP_BUF_AT(m, size) m->m_data + size

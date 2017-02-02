@@ -1092,7 +1092,8 @@ connected_type:
 	}
 	/* Place the data */
 	if (inp->pkt) {
-		SCTP_BUF_NEXT(inp->pkt_last) = m;
+		//SCTP_BUF_NEXT(inp->pkt_last) = m;
+		SCTP_BUF_ASSIGN_NEXT(inp->pkt_last, m);
 		inp->pkt_last = m;
 	} else {
 		inp->pkt_last = inp->pkt = m;
