@@ -10078,6 +10078,7 @@ sctp_chunk_retransmission(struct sctp_inpcb *inp,
 
 			snprintf(msg, sizeof(msg), "TSN %8.8x retransmitted %d times, giving up",
 				 chk->rec.data.tsn, chk->snd_count);
+            SCTP_PRINTF("=====>sctp_chunk_retransmission tried %d times, giving up\n", chk->snd_count);
 			op_err = sctp_generate_cause(SCTP_BASE_SYSCTL(sctp_diag_info_code),
 			                             msg);
 			atomic_add_int(&stcb->asoc.refcnt, 1);

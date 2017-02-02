@@ -3251,6 +3251,7 @@ sctp_notify_send_failed2(struct sctp_tcb *stcb, uint32_t error,
 		ssf->ssf_info.sinfo_assoc_id = sctp_get_associd(stcb);
 		ssf->ssf_assoc_id = sctp_get_associd(stcb);
 	}
+    SCTP_PRINTF("=====>Setting tail pointer of m_notify control to sp->data: %p\n", sp->data);
 	SCTP_BUF_NEXT(m_notify) = sp->data;
 
 	/* Steal off the mbuf */
@@ -3274,6 +3275,16 @@ sctp_notify_send_failed2(struct sctp_tcb *stcb, uint32_t error,
 		return;
 	}
 	control->spec_flags = M_NOTIFICATION;
+    SCTP_PRINTF("=====> sctp_notify_send_failed2 add control message to readq, message addresses:\n");
+    if (control) {
+        struct mbuf* temp = control->data;
+        while (temp) {
+            SCTP_PRINTF("=====> %p, ", temp);
+            temp = SCTP_BUF_NEXT(temp);
+        }
+    } else {
+        SCTP_PRINTF("=====> control itself is null\n");
+    }
 	sctp_add_to_readq(stcb->sctp_ep, stcb,
 	    control,
 	    &stcb->sctp_socket->so_rcv, 1, SCTP_READ_LOCK_NOT_HELD, so_locked);
@@ -4098,6 +4109,7 @@ sctp_report_all_outbound(struct sctp_tcb *stcb, uint16_t error, int holds_lock, 
 			/*sa_ignore FREED_MEMORY*/
 		}
 	}
+    SCTP_PRINTF("=====>sctp_report_all_outbound finished firing send failed for pending messages\n");
 
 	if (holds_lock == 0) {
 		SCTP_TCB_SEND_UNLOCK(stcb);
@@ -4133,6 +4145,7 @@ sctp_abort_notification(struct sctp_tcb *stcb, uint8_t from_peer, uint16_t error
 		return;
 	}
 	/* Tell them we lost the asoc */
+    SCTP_PRINTF("=====>sctp_abort_notification calling sctp_report_all_outbound\n");
 	sctp_report_all_outbound(stcb, error, 1, so_locked);
 	if (from_peer) {
 		sctp_ulp_notify(SCTP_NOTIFY_ASSOC_REM_ABORTED, stcb, error, abort, so_locked);
@@ -4307,6 +4320,7 @@ sctp_abort_an_association(struct sctp_inpcb *inp, struct sctp_tcb *stcb,
 	}
 	/* notify the ulp */
 	if ((inp->sctp_flags & SCTP_PCB_FLAGS_SOCKET_GONE) == 0) {
+        SCTP_PRINTF("=====>sctp_abort_an_association calling sctp_abort_notification\n");
 		sctp_abort_notification(stcb, 0, 0, NULL, so_locked);
 	}
 	/* now free the asoc */

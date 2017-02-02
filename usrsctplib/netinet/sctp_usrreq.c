@@ -82,6 +82,7 @@ sctp_init(struct protosw *pp SCTP_UNUSED, struct domain *dp SCTP_UNUSED)
 sctp_init(void)
 #endif
 {
+    SCTP_PRINTF("=====>Init'ing brian's patched usrsctp top\n");
 #if !defined(__Panda__) && !defined(__Userspace__)
 	u_long sb_max_adj;
 
@@ -162,6 +163,7 @@ sctp_init(void)
 	sctp_start_main_timer();
 	timeout(sctp_delayed_startup, NULL, 1);
 #endif
+    SCTP_PRINTF("=====>Init'ing brian's patched usrsctp\n");
 }
 
 #if defined(__FreeBSD__)
