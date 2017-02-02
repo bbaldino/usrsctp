@@ -3282,6 +3282,7 @@ sctp_notify_send_failed2(struct sctp_tcb *stcb, uint32_t error,
             SCTP_PRINTF("=====> %p, ", temp);
             temp = SCTP_BUF_NEXT(temp);
         }
+        SCTP_PRINTF("\n");
     } else {
         SCTP_PRINTF("=====> control itself is null\n");
     }
