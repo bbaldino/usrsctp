@@ -817,9 +817,14 @@ sctp_hashfreedestroy(void *vhashtbl, struct malloc_type *type, u_long hashmask);
 #define SCTP_BUF_LEN(m) (m->m_len)
 #define SCTP_BUF_NEXT(m) (m->m_next)
 #define SCTP_BUF_ASSIGN_NEXT(m, new_m) do { \
-    if (new_m && ((void*)new_m < (void*)0x100)) { \
+    if (new_m && ((void*)new_m < (void*)0x110)) { \
         SCTP_PRINTF("=====> bad m_next assignment in %s, line %d to addr %p\n", __FILE__, __LINE__, (void*)new_m); \
         SCTP_PRINTF("=====> %p\n", ((struct mbuf*)new_m)->m_next); \
+    } else if (new_m) { \
+        struct mbuf* brian_temp = (struct mbuf*)new_m; \
+        while (brian_temp) { \
+            brian_temp = brian_temp->m_next; \
+        } \
     } else { \
     } \
     (m->m_next = new_m); \
